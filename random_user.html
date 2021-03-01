@@ -1,11 +1,108 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- CDN de jquery -->
-  <!-- TODO Charger le css de bootstrap 4 ici -->
-  <!-- TODO intégrer fontawesome ici -->
-</head>
-  <body>
+  <head>
+    <meta charset="utf-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- CDN de jquery -->
+    <!-- TODO Charger le css de bootstrap 4 ici -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- TODO intégrer fontawesome ici -->
+    <script src="https://kit.fontawesome.com/5c80848bff.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body class="bg-light">
+    <script>
+
+
+    $(document).ready(function(){
+      i=0;
+      function appelAjax(){
+        $.ajax({
+          url: 'https://randomuser.me/api/',
+          dataType: 'json',
+          async: false,
+          success: function(data) {
+            console.log(data);
+            addInfo(data);
+          }
+        });
+      }
+
+      appelAjax();
+
+      $("#submit").click(function(){
+          var valInput = parseInt($('input').val());
+          loadProfile(valInput);
+          console.log(valInput);
+        });
+
+        function addInfo(data){
+          if(i!=0){
+            var id = "profile"+i;
+            $('#profile').clone().appendTo('#main').attr("id",id);
+          }else{
+            var id = "profile";
+          }
+
+          $("#"+id).find('img').attr("src",data['results']['0']['picture']['medium']);
+          $("#"+id).find('#title').text('  ' + data['results']['0']['name']['title']);
+          $("#"+id).find('#firstname').text(data['results']['0']['name']['first']);
+          $("#"+id).find('#lastname').text(data['results']['0']['name']['last']);
+          $("#"+id).find('#phone').text('  ' +data['results']['0']['phone']);
+          $("#"+id).find('#address').text('  ' +data['results']['0']['location']['street']['number'] +' ');
+          $("#"+id).find('#address').append(data['results']['0']['location']['street']['name']+' ');
+          $("#"+id).find('#address').append(data['results']['0']['location']['postcode']+' ');
+          $("#"+id).find('#address').append(data['results']['0']['location']['city']+' ');
+          $("#"+id).find('#address').append(data['results']['0']['location']['state']+' ');
+          $("#"+id).find('#address').append(data['results']['0']['location']['country']+' ');
+          $("#"+id).find('#email').text('  ' +data['results']['0']['email']);
+          var link = "https://www.latlong.net/c/?lat="+data['results']['0']['location']['coordinates']['latitude']+"&long="+data['results']['0']['location']['coordinates']['longitude'];
+          $("#"+id).find('a').attr("href",link);
+          i++;
+        }
+
+        function loadProfile(valInput){
+          console.log("loadProfile"+i);
+          while(i<valInput){
+            console.log("bouh"+i);
+            appelAjax();
+
+          }
+        }
+    });
+    </script>
+
+    <form class="form-inline">
+      <div class="form-group mx-auto mb-2">
+        number of people to display
+        <label for="nbProfile" class="sr-only">number of people to display</label>
+        <input type="text" class="form-control mx-2 " value="" id="nbProfile" placeholder="1">
+      <button type="button" class="btn btn-primary mb-2" id="submit">Confirm </button>
+      </div>
+    </form>
+
+    <div id="main">
+    <div class="container border bg-white border-dark mt-4" id="profile">
+      <div class="row align-items-center">
+      <div class = " col-md-1 h-100 mr-4 my-2" >
+        <img src="" alt="profil" width="100px" height="100px" >
+      </div>
+      <div class = " col-md-10 h-100 " >
+        <div class="row align-items-center">
+          <div class="col-md-7"><i class="fas fa-user-circle"></i><span id="title"></span> <span id="firstname"></span> <span id="lastname"></span></div>
+          <div class="col-md-5"><i class="fas fa-phone-alt"></i><span id="phone"></span></div>
+        </div>
+        <div class="row align-items-center">
+          <a href="" target="_blank" class="col-md-7 mt-3">
+            <p class = "text-dark"><i class="fas fa-map-marker-alt"></i><span id="address"></span></p>
+          </a>
+          <div class="col-md-5 "><i class="fas fa-envelope"></i><span id="email"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
   </body>
 </html>
